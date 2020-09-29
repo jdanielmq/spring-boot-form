@@ -1,21 +1,28 @@
 package cl.springboot.form.app.models.domain;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 
 public class Usuario {
 	
 	private String id;
 	
-	@NotEmpty
+	@NotEmpty(message = "el nombre viene vacio.")
 	private String nombre;
-	@NotEmpty
+	@NotEmpty(message = "el apellido viene vacio.")
 	private String apellido;
 	
-	@NotEmpty
+	@NotBlank
+	@Size(min = 1, max = 20)
 	private String username;
 	@NotEmpty
+	@Size(min = 8, max = 20)
 	private String password;
-	@NotEmpty
+	
+	@NotEmpty(message = "el correo no corresponde al formato")
+	@Email
 	private String email;
 	
 	public Usuario(String id, @NotEmpty String nombre, @NotEmpty String apellido) {

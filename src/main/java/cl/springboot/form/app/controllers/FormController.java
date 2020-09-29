@@ -5,19 +5,32 @@ import java.util.Map;
 
 import javax.validation.Valid;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 
 import cl.springboot.form.app.models.domain.Usuario;
+import cl.springboot.form.app.validador.UsuarioValidador;
 
 @Controller
 @SessionAttributes("usuario")
 public class FormController {
+	
+	@Autowired
+	private UsuarioValidador usuarioValidador;
+
+	/*para registar la clase de validaciones de atributos de un objetos*/
+//	@InitBinder
+//	public void initBinder(WebDataBinder binder) {
+//		binder.setValidator(usuarioValidador);
+//	}
 
 	@GetMapping("/form")
 	public  String form(Model model) {
@@ -49,6 +62,9 @@ public class FormController {
 	@PostMapping("/form")
 	public String procesar(@Valid Usuario usuario, BindingResult results, Model model, SessionStatus status) {
 		
+		/*aca vamos o estamos validando de forma explicita*/
+		usuarioValidador.validate(usuario,results);
+		
 		model.addAttribute("titulo", "Resultado desde Fromulario");
 		
 		if(results.hasErrors()) {
@@ -63,7 +79,7 @@ public class FormController {
 		
 		model.addAttribute("titulo", "Resultado desde Fromulario");
 		model.addAttribute("usuario", usuario);
-		
+		status.setComplete();
 		
 	
 		return "resultado";
